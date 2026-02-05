@@ -1,0 +1,8 @@
+.idea/
+*.iml
+*.iws
+out/
+
+__pycache__/
+venv/
+.env
