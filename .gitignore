@@ -6,3 +6,5 @@ out/
 __pycache__/
 venv/
 .env
+
+hf_token.txt

@@ -1,2 +1,5 @@
+huggingface-hub
+transformers
+pandas
 tokenizers
 ollama~=0.6.1
