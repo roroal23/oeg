@@ -1,0 +1,10 @@
+-Cada vez abrir la terminal hay que hacer esto:
+si dentro de la carpeta proyectos/oeg/shuyi/ollama, solamente: source venv/bin/activate
+si está en HOME, hace: source proyectos/oeg/shuyi/ollama/venv/bin/activate
+
+-Para subir a github:
+1.git status para comprobar un poco los cambios(solo para ver si están los cambios aplicados, no obligatorio)
+2.git add .
+3.git status(comprobar ahora los cambios)
+4.git commit -m "mensaje descriptivo"
+5.git push
