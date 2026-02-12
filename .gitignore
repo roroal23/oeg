@@ -8,5 +8,4 @@ venv/
 .env
 
 hf_token.txt
-*.csv
-data/*
+*/data/*
