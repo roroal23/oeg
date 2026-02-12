@@ -8,4 +8,5 @@ venv/
 .env
 
 hf_token.txt
-*/data/*
+*.csv
+/rodrigo/julien-chaumond/data/oscar.eo.txt
