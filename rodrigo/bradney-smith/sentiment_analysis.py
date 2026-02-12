@@ -49,7 +49,7 @@ def preprocess_dataset(path):
 if __name__ == "__main__":
 
     #Parameters
-    dataset = preprocess_dataset('IMDB Dataset.csv')
+    dataset = preprocess_dataset('data/IMDB Dataset.csv')
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     model = BertForSequenceClassification.from_pretrained(
         'bert-base-uncased', num_labels = 2)
