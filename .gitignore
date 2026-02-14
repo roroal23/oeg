@@ -9,4 +9,9 @@ venv/
 
 hf_token.txt
 *.csv
+
+
 /rodrigo/julien-chaumond/data/oscar.eo.txt
+/rodrigo/julien-chaumond/EsperBERTo/checkpoint-3807/
+*.safetensors
+
