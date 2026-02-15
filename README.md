@@ -1,1 +1,2 @@
-# oeg
+# OEG - Introducción a Modelos de Lenguaje
+Este repositorio contiene el trabajo inicial y los ejercicos prácticos desarrollados en colaboración con el Ontology Engineering Group (OEG) de la UPM. El objetivo de esta colaboración es explorar la evolución de los modelos de lenguaje (LLMs), desde sus bases teóricas hasta la implementación local de modelos, y eventualmente desarrollar métricas para su evaluación.
