@@ -11,7 +11,7 @@ hf_token.txt
 *.csv
 
 
-/rodrigo/julien-chaumond/data/oscar.eo.txt
-/rodrigo/julien-chaumond/EsperBERTo/checkpoint-3807/
+/rodrigo/training-from-scratch/data/oscar.eo.txt
+/rodrigo/training-from-scratch/EsperBERTo/checkpoint-3807/
 *.safetensors
 
