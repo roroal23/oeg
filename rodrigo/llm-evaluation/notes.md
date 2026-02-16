@@ -52,9 +52,11 @@ Implementación:
 nltk.translate.bleu_score
 
 Fuentes:
+- https://aclanthology.org/P02-1040.pdf
 - https://medium.com/nlplanet/two-minutes-nlp-learn-the-bleu-metric-by-examples-df015ca73a86
 - https://www.ibm.com/docs/en/watsonx/saas?topic=metrics-bleu
 - https://www.geeksforgeeks.org/nlp/nlp-bleu-score-for-evaluating-neural-machine-translation-python/
+- https://www.nltk.org/api/nltk.translate.bleu_score.html
 
 ## ROUGE (Recall-Oriented Understudy for Gisting Evaluation)
 De forma similar a BLEU, REOUGE es una serie de métricas que evaluan la similitud entre un texto generado y otro de referencia.
