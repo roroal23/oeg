@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  langflow:
+    image: langflowai/langflow:latest
+    container_name: langflow
+    ports:
+      - "7860:7860"
+    environment:
+      # Evita que tengo que loguearme cada vez (util para pruebas)
+      - LANGFLOW_AUTO_LOGIN=true
+      # Define donde se guarda la base de datos interna(SQLite)
+      - LANGFLOW_DATABASE_URL=sqlite:////app/langflow/langflow.db
+      - LANGFLOW_CONFIG_DIR=/app/langflow
+    volumes:
+      # MUY IMPORTANTE: guarda mis datos en mi VM
+      # Mapea la carpeta de la VM "./langflow_data" con la del contenedor
+      - ./langflow_data:/app/langflow
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

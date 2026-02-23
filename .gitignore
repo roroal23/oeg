@@ -6,6 +6,8 @@ out/
 __pycache__/
 venv/
 .env
+*.pyc
+
 
 hf_token.txt
 *.csv
@@ -15,3 +17,9 @@ hf_token.txt
 /rodrigo/training-from-scratch/EsperBERTo/checkpoint-3807/
 *.safetensors
 
+# Ignorar base de datos y archivos de configuración de Langflow
+shuyi/ragConLangflow/langflow_data/
+
+# Ignorar carpetas de entornos virtuales si tuvieras
+.venv/
+venv/
