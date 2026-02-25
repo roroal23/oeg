@@ -23,3 +23,5 @@ shuyi/ragConLangflow/langflow_data/
 # Ignorar carpetas de entornos virtuales si tuvieras
 .venv/
 venv/
+
+shuyi/ragConLangChain/Prueba1/Discurso_Ingenieria_Ontologica.pdf
