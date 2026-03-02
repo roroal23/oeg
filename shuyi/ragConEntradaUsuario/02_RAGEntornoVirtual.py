@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
@@ -24,7 +25,7 @@ st.markdown("En este chat se le brinda al modelo un fichero")
 
 if st.button("Generar Examen"):
 	with st.spinner("Procesando documento y generando examen..."):
-		loader = PyPDFLoader("Discurso_Ingenieria_Ontologica.pdf", pypdf_kwargs={"strict": False, "encoding-name": "utf-8"})
+		loader = PyMuPDFLoader("Discurso_Ingenieria_Ontologica.pdf")
 		paginas = loader.load_and_split()
 
 		embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
