@@ -24,7 +24,7 @@ st.markdown("En este chat se le brinda al modelo un fichero")
 
 if st.button("Generar Examen"):
 	with st.spinner("Procesando documento y generando examen..."):
-		loader = PyPDFLoader("Discurso_Ingenieria_Ontologica.pdf")
+		loader = PyPDFLoader("Discurso_Ingenieria_Ontologica.pdf", pypdf_kwargs={"strict": False, "encoding-name": "utf-8"})
 		paginas = loader.load_and_split()
 
 		embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
