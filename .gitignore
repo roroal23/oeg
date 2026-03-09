@@ -25,4 +25,7 @@ shuyi/ragConLangflow/langflow_data/
 venv/
 
 shuyi/ragConLangChain/Prueba1/Discurso_Ingenieria_Ontologica.pdf
-/conjunto/ollama_and_rag/resources/Discurso_Ingenieria_Ontologica.pdf
+/trabajo-conjunto/ollama_and_rag/resources/Discurso_Ingenieria_Ontologica.pdf
+
+#Obsidian
+.obsidian/
