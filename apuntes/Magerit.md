@@ -140,3 +140,18 @@ Currently Loaded Modules:
 Magerit tiene disponible una serie de compilaciones preparadas por año, las cuales carga por defecto. En nuestras máquinas, a fecha de hoy, se tiene cargado `apps/2021`. Se puede seleccionar una de ellas con `module load apps/[año]`
 
 > [!info] Nota: Intenté cargar versiones más recientes de `apps/[año]` pero fallaron. Parece ser que la más reciente a fecha de hoy es `apps/2021`
+
+
+### NOTAS (No serializadas)
+
+enviar trabajo
+`sbatch job.sh `
+
+ver procesos encolados
+ `squeue -a`
+
+comando para ver la ejecución de un proceso
+`sacct -j 1063345 --format=JobID,JobName,State,ExitCode,DerivedExitCode,Comment`
+`saact -j [numeroProceso]`
+
+Nota: Tener mucho cuidado con las rutas! El programa NO dará mensajes de error explicativos si falla al intentar acceder a una ruta
