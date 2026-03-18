@@ -20,9 +20,8 @@ Donde:
 `<code>`:  Código del proyecto. Ej: x123
 `<user>`: Código del usuario. Ej: x123456
 
-## Gestión de módulos (Lmod)
+# Gestión de módulos (Lmod)
 Magerit gestiona las versiones de aplicaciones gracias a Lmod. A continuación, comandos útiles para manejar estos módulos.
-
 ### Búsqueda de módulos: module keyword
 `module keyword <key1> <key2> <key3>` permite buscar los módulos disponibles usando una o varias palabras claves. Es más flexible buscando que `module avail`. 
 Especialmente útil cuando no se conoce el nombre del módulo.
@@ -53,6 +52,8 @@ The following modules match your search criteria: "python", "Python", "python3"
 
 ### Ver módulos disponibles: module avail 
 `module avail <app>` muestra todas las versiones disponibles asociadas a una aplicación del sistema.
+> [!info] Nota: Este comando puede tardar un momento en cargar...
+
 ```bash
 [x123456@login2 ~]$ module avail Python/3
 
@@ -139,10 +140,218 @@ Currently Loaded Modules:
 
 Magerit tiene disponible una serie de compilaciones preparadas por año, las cuales carga por defecto. En nuestras máquinas, a fecha de hoy, se tiene cargado `apps/2021`. Se puede seleccionar una de ellas con `module load apps/[año]`
 
-> [!info] Nota: Intenté cargar versiones más recientes de `apps/[año]` pero fallaron. Parece ser que la más reciente a fecha de hoy es `apps/2021`
+> [!info] NOTA
+> Intenté cargar versiones más recientes de `apps/[año]` pero fallaron. Parece ser que la más reciente a fecha de hoy es `apps/2021`
+
+# Sobreviviendo al "Version hell"
+## Versiones de Python
+Magerit ofrece múltiples versiones de Python, lo que puede resultar confuso al inicio. Por lo que a continuación, explicaré varios puntos sobre las versiones disponibles.
+
+```bash
+[x123456@login1 x123]$ module avail Python/3
+
+----------------------------------------------------------------------------- /media/apps/avx512-2021/modules/all -----------------------------------------------------------------------------
+   Python/3.6.6-foss-2018b        Python/3.9.5-GCCcore-10.3.0-bare     Python/3.10.8-GCCcore-12.2.0-bare  Python/3.13.5-GCCcore-14.3.0 (D)
+   Python/3.6.6-fosscuda-2018b    Python/3.9.5-GCCcore-10.3.0          Python/3.10.8-GCCcore-12.2.0      protobuf-python/3.13.0-foss-2020a-Python-3.8.2
+   Python/3.7.2-GCCcore-8.2.0     Python/3.9.6-GCCcore-11.2.0-bare     Python/3.11.3-GCCcore-12.3.0         protobuf-python/3.14.0-GCCcore-10.2.0
+   Python/3.7.4-GCCcore-8.3.0     Python/3.9.6-GCCcore-11.2.0          Python/3.11.5-GCCcore-13.2.0         protobuf-python/3.17.3-GCCcore-10.3.0
+   Python/3.8.2-GCCcore-9.3.0     Python/3.10.4-GCCcore-11.3.0-bare    Python/3.12.3-GCCcore-13.3.0         protobuf-python/3.17.3-GCCcore-11.2.0
+   Python/3.8.6-GCCcore-10.2.0    Python/3.10.4-GCCcore-11.3.0         Python/3.13.1-GCCcore-14.2.0         protobuf-python/3.19.4-GCCcore-11.3.0
+
+  Where:
+   D:  Default Module
+```
+
+### Toolchain
+Después de la versión de Python `Python/3.XX.X` aparece `GCCcore, foss, o fosscuda`
+- `GCCcore` es la más común. Se construyo una versión especifica del compilador GCC. Se recomienda si usas librerías que se compilen en C++, como `numpy o pandas`
+- `foss (Free Open Source Software)` incluye el compilador GCC y además librerías matemáticas optimizadas. Se recomienda para calculo numérico pesado.
+- `fosscud` es similar a foss, pero esta pre configurado para hacer uso de `CUDA`. Recomendable si se usa `PyTorch` o `TensorFlow` con GPU.
+### Sufijo -bare
+Algunas versiones incluyen el sufijo `-bare`, como por ejemplo: `Python/3.9.6-GCCcore-11.2.0-bare` . Estos significa que es una instalación desnuda. Solo tiene instalado lo mínimo necesario para funcionar.
+Se recomienda usar este tipo de módulos para controlar al máximo que versión de cada librería se usa, aunque suelen traer consigo problemas si no se organiza correctamente la instalación de dependencias.
+### Versión por defecto
+Por defecto, a fecha de hoy (marzo de 2026), se ofrece por defecto la versión `Python/3.13.5-GCCcore-14.3.0`. La versión por defecto esta marcada por `(D)`
+
+### Como elegir la versión: Puntos a tener en cuenta
+- Si desarrollas código en tu ordenador personal, puedes obtener la versión que tienes escribiendo:
+```bash
+usuario@PC:~$ python --version
+Python 3.12.3
+```
+Esto te puede dar una idea sobre que versión usar. Por ejemplo, si en mi ordenador trabajo con la versión `3.12.3` , la elección más cercana a mi entorno sería `Python/3.12.3-GCCcore-13.3.0`
+
+- Usar la ultima versión puede ser contraproducente, debido a que muchas librerías tardan en adaptarse a los cambios de sintaxis y a la estructura de ejecución del programa.  Al ser un lenguaje interpretado, Python puede sufrir cambios significativos de una versión a otra.
+## Entornos virtuales (venvs)
+Los entornos virtuales o venvs son una de las herramientas más poderosas que tiene Python para manejar las versiones a lo largo de diferentes proyectos y dentro de Magerit, usarlas es un requisito. Dado que es imposible usar una "configuración global" de Python que todos los usuarios puedan usar sin tener conflictos de dependencias, cada proyecto y/o usuario debe gestionar sus propias dependencias dentro de un venv.
+Podemos pensar en un venv como una "burbuja": un entorno aislado en el que convive una versión especifica de Python y sus librerías, junto a utilidades (como pip).  A modo practico, un venv es un directorio en el que residen los binarios de Python y sus librerias.
+
+### Creación del entorno
+Puedes crear un venv usando el siguiente comando. **Esto solo se realiza una vez.**
+```bash 
+[x123456@login3 prueba_venv]$ python3 -m venv entorno_prueba
+```
+Donde `entorno_prueba` es el nombre del entorno, es personalizable.
+
+> [!warning] IMPORTANTE
+> Antes de crear un venv es importante cargar el modulo de Python que vayamos a utilizar, usando `module load Python/3....`.
+>  Si no cargamos ningún modulo, el comando utilizará la versión por defecto de Python que tenga definida (no tiene porque ser la misma versión por defecto que se lista en `module avail Python/3`) y podemos tener conflictos al instalar librerías.
+
+Una vez activado el entorno (como se ve en el siguiente punto), podemos comprobar que versión de Python esta usando el venv.
+```bash
+(entorno_prueba) [x123456@login3 prueba_venv]$ python --version
+Python 3.6.8
+```
+
+### Activación del entorno
+Una vez creado el entorno, podemos activarlo usando el siguiente comando. El comando le indica al sistema que deseamos usar la configuración de Python que se encuentra en este entorno. 
+**Esto se debe realizar cada vez que queramos usar el entorno**
+```bash 
+[x123456@login3 prueba_venv]$ source entorno_prueba/bin/activate
+(entorno_prueba) [x123456@login3 prueba_venv]$ 
+```
+
+Como podemos ver, una vez ejecutado el comando de activación aparece entre paréntesis el nombre del entorno: `(entorno_prueba)`
+### Trabajo en el entorno
+Una vez activado el entorno, podemos instalar las dependencias que queramos. En el siguiente apartado, explicaremos como se trabaja con `pip`.
+### Desactivación del entorno
+Cuando hemos terminado de trabajar con el entorno, podemos "salir" de la burbuja o desactivar el entorno con el comando:
+```bash
+(entorno_prueba) [x123456@login3 prueba_venv]$ deactivate
+[x123456@login3 prueba_venv]$ 
+```
+
+> [!info] NOTA
+> Al enviar trabajos a Magerit, realmente no es necesario desactivar el venv porque toda la sesión se destruye al finalizar el trabajo.
+> Aún así se considera una buena práctica de limpieza, por lo que es recomendable usarlo en todos nuestros proyectos.
+
+### Eliminar el entorno
+Aunque es muy poco probable que tengas que hacer esto, puedes eliminar un entorno virtual simplemente borrando el directorio que lo contiene.
+``` bash
+[x123456@login3 prueba_venv]$ rm -rf entorno_prueba/
+```
+
+## Utilidades de pip
+
+Pip es el gestor de librerias de Python por excelencia. Curiosamente, es el acrónimo de `Pip Installs Packages`, por lo que es un acrónimo recursivo.
+
+Su funcionamiento es el siguiente, si yo ejecuto `pip install pandas`:
+1. Busca "pandas" en el servidor de PyPi (Python Package Index)
+2. Comprueba las dependencias de "pandas"
+3. Descarga e instala todo lo necesario dentro del entorno virtual
+
+> [!warning] AVISO
+> Solo se puede usar una versión de cada librería a la vez, por lo que es extremadamente importante saber que versiones usamos. De ese modo, evitamos conflictos de dependencias
+### Instalar última versión de una librería
+Se puede instalar la ultima versión de una librería indicando únicamente su nombre. Por ejemplo, `pip install pandas`
+
+```bash
+(entorno_prueba) [x244645@login2 prueba_venv]$ pip install pandas
+Collecting pandas
+  Downloading https://files.pythonhosted.org/packages/c3/e2/00cacecafbab071c787019f00ad84ca3185952f6bb9bca9550ed83870d4d/pandas-1.1.5-cp36-cp36m-manylinux1_x86_64.whl (9.5MB)
+    100% |████████████████████████████████| 9.5MB 137kB/s 
+Collecting numpy>=1.15.4 (from pandas)
+  Cache entry deserialization failed, entry ignored
+  Downloading https://files.pythonhosted.org/packages/45/b2/6c7545bb7a38754d63048c7696804a0d947328125d81bf12beaa692c3ae3/numpy-1.19.5-cp36-cp36m-manylinux1_x86_64.whl (13.4MB)
+    100% |████████████████████████████████| 13.4MB 94kB/s 
+Collecting pytz>=2017.2 (from pandas)
+  Downloading https://files.pythonhosted.org/packages/10/99/781fe0c827be2742bcc775efefccb3b048a3a9c6ce9aec0cbf4a101677e5/pytz-2026.1.post1-py2.py3-none-any.whl (510kB)
+    100% |████████████████████████████████| 512kB 1.3MB/s 
+Collecting python-dateutil>=2.7.3 (from pandas)
+  Downloading https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229kB)
+    100% |████████████████████████████████| 235kB 1.1MB/s 
+Collecting six>=1.5 (from python-dateutil>=2.7.3->pandas)
+  Downloading https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl
+Installing collected packages: numpy, pytz, six, python-dateutil, pandas
+ 
+Successfully installed numpy-1.19.5 pandas-1.1.5 python-dateutil-2.9.0.post0 pytz-2026.1.post1 six-1.17.0
+You are using pip version 9.0.3, however version 26.0.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+```
+
+Como podemos ver, al instalar `pandas`, pid trae consigo ciertas dependencias como `numpy, pytz, python-dateutil y siz`
+
+> [!info] NOTA
+>  Instalar dependencias desde la terminal interactiva de Magerit es extremadamente lento, para realizar la preparación del entorno virtual se recomienda usar los "nodos debug"
+### Instalar versión especifica de una librería
+Para instalar una versión especifica debemos indicarla después del nombre. Por ejemplo, `install numpy==1.15.4`
+
+### Ver las librerias instaladas
+Podemos verlas usando el comando `pip list`. Podemos indicar el formato deseado.
+```bash
+(entorno_prueba) [x123456@login2 prueba_venv]$ pip list
+DEPRECATION: The default format will switch to columns in the future. You can use --format=(legacy|columns) (or define a format=(legacy|columns) in your pip.conf under the [list] section) to disable this warning.
+numpy (1.19.5)
+pandas (1.1.5)
+pip (9.0.3)
+python-dateutil (2.9.0.post0)
+pytz (2026.1.post1)
+setuptools (39.2.0)
+six (1.17.0)
+
+(entorno_prueba) [x123456@login2 prueba_venv]$ pip list --format=columns
+Package         Version     
+--------------- ------------
+numpy           1.19.5      
+pandas          1.1.5       
+pip             9.0.3       
+python-dateutil 2.9.0.post0 
+pytz            2026.1.post1
+setuptools      39.2.0      
+six             1.17.0      
+```
+
+### Eliminar una librería
+Si cometimos un error o ya no queremos usar una librería, podemos eliminarla indicando su nombre. Por ejemplo, `pip uninstall pandas`
+
+```bash
+(entorno_prueba) [x123456@login2 prueba_venv]$ pip uninstall pandas
+```
+
+### Congelar las librerías instaladas
+Una de los comandos más útiles para trabajar con este tipo de entornos es `pip freeze`. Este comando vuelca la lista de dependencias instaladas en el entorno.
+```bash
+(entorno_prueba) [x123456@login2 prueba_venv]$ pip freeze
+numpy==1.19.5
+pandas==1.1.5
+python-dateutil==2.9.0.post0
+pytz==2026.1.post1
+six==1.17.0
+```
+
+Por convención, **este volcado se suele redirigir a un fichero llamado `requirements.txt`**
+```bash
+(entorno_prueba) [x123456@login2 prueba_venv]$ pip freeze > requirements.txt
+```
+
+### Replicar un entorno a partir de `requirements.txt`
+Una vez construido el fichero `requirements.txt`, podemos exportar o replicar un entorno descargando todas sus dependencias. Se usa el comando `pip install -r requirements.txt`
+
+Para este ejemplo, crearé un nuevo entorno y replicaré las dependencias de `entorno_prueba`
+```bash
+[x123456@login2 prueba_venv]$ python3 -m venv entorno_copiado
+[x123456@login2 prueba_venv]$ source entorno_copiado/bin/activate
+(entorno_copiado) [x123456@login2 prueba_venv]$ pip install -r requirements.txt 
+Collecting numpy==1.19.5 (from -r requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/45/b2/6c7545bb7a38754d63048c7696804a0d947328125d81bf12beaa692c3ae3/numpy-1.19.5-cp36-cp36m-manylinux1_x86_64.whl
+Collecting pandas==1.1.5 (from -r requirements.txt (line 2))
+  Using cached https://files.pythonhosted.org/packages/c3/e2/00cacecafbab071c787019f00ad84ca3185952f6bb9bca9550ed83870d4d/pandas-1.1.5-cp36-cp36m-manylinux1_x86_64.whl
+Collecting python-dateutil==2.9.0.post0 (from -r requirements.txt (line 3))
+  Using cached https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl
+Collecting pytz==2026.1.post1 (from -r requirements.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/10/99/781fe0c827be2742bcc775efefccb3b048a3a9c6ce9aec0cbf4a101677e5/pytz-2026.1.post1-py2.py3-none-any.whl
+Collecting six==1.17.0 (from -r requirements.txt (line 5))
+  Using cached https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl
+Installing collected packages: numpy, pytz, six, python-dateutil, pandas
+Successfully installed numpy-1.19.5 pandas-1.1.5 python-dateutil-2.9.0.post0 pytz-2026.1.post1 six-1.17.0
+You are using pip version 9.0.3, however version 26.0.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+(entorno_copiado) [x123456@login2 prueba_venv]$ 
+
+```
 
 
-### NOTAS (No serializadas)
+# NOTAS (No serializadas)
 
 enviar trabajo
 `sbatch job.sh `
