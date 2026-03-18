@@ -11,7 +11,8 @@ venv/
 
 hf_token.txt
 *.csv
-
+.venv*
+.python*
 
 /rodrigo/training-from-scratch/data/oscar.eo.txt
 /rodrigo/training-from-scratch/EsperBERTo/checkpoint-3807/
