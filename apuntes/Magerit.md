@@ -231,7 +231,7 @@ Aunque es muy poco probable que tengas que hacer esto, puedes eliminar un entorn
 [x123456@login3 prueba_venv]$ rm -rf entorno_prueba/
 ```
 
-## Utilidades de pip
+## Utilidades de `pip`
 
 Pip es el gestor de librerias de Python por excelencia. Curiosamente, es el acrónimo de `Pip Installs Packages`, por lo que es un acrónimo recursivo.
 
@@ -351,6 +351,37 @@ You should consider upgrading via the 'pip install --upgrade pip' command.
 ```
 
 
+# Definición de trabajos con `sbatch`
+"Magerit se explota mediante trabajos `batch` usando SLURM como gestor y planificador de recursos". Esto significa que nosotros debemos encargarnos de la configuración del trabajo y dependiendo del trabajo, el planificador asignará uno o varios nodos para realizarlo.
+Los trabajos se definen a través de un fichero `job.sh` (un script de shell), que contiene las directivas de SLURM junto con los pasos de preparación del entorno y la llamada de ejecución de nuestro programa.
+
+Se nos proporciona la siguiente plantilla de `job.sh`
+```bash
+#!/bin/bash -l
+##----------------------- Start job description -----------------------
+#SBATCH --partition=standard
+#SBATCH --gres=gpu:a100:1
+#SBATCH --job-name=nombre_trabajo
+#SBATCH --ntasks=1
+#SBATCH --mem-per-cpu=1G
+#SBATCH --time=12:00:00
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=usuario@ejemplo.com
+#SBATCH --output=ruta_absoluta/run_logs/out-%u-%x-%j.log
+#SBATCH --error=ruta_absoluta/run_logs/err-%u-%x-%j.log
+#SBATCH --chdir=ruta_absoluta
+
+##------------------------ End job description ------------------------
+
+module purge && module load <app>
+
+srun <app> --app-param app_args
+```
+
+> [!info] En construcción
+> Se recomienda revisa la guía oficial de Cesvima
+> https://docs.cesvima.upm.es/magerit/jobs/
+
 # NOTAS (No serializadas)
 
 enviar trabajo
@@ -364,3 +395,10 @@ comando para ver la ejecución de un proceso
 `saact -j [numeroProceso]`
 
 Nota: Tener mucho cuidado con las rutas! El programa NO dará mensajes de error explicativos si falla al intentar acceder a una ruta
+```
+En local:
+Descargar pyenv
+pyenv install versionespecifica
+pyenv local versionespecifica
+python -m env nombre
+```
