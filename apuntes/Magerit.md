@@ -143,6 +143,55 @@ Magerit tiene disponible una serie de compilaciones preparadas por año, las cua
 > [!info] NOTA
 > Intenté cargar versiones más recientes de `apps/[año]` pero fallaron. Parece ser que la más reciente a fecha de hoy es `apps/2021`
 
+### Limpieza de módulos: module purge
+Podemos limpiar todos los módulos presentes en un nodo con el comando `module purge`. La única excepción es `apps/2021` que solo se puede eliminar usando la opción `--force`
+
+Antes de purge:
+```bash 
+[x244645@login1 ~]$ module list
+
+Currently Loaded Modules:
+  1) StdEnv   2) apps/2021 (S)
+
+  Where:
+   S:  Module is Sticky, requires --force to unload or purge
+```
+Purge:
+```bash
+[x244645@login1 ~]$ module purge
+The following modules were not unloaded:
+  (Use "module --force purge" to unload all):
+
+  1) apps/2021
+```
+Después de purge:
+```bash
+[x244645@login1 ~]$ module list
+
+Currently Loaded Modules:
+  1) apps/2021 (S)
+
+  Where:
+   S:  Module is Sticky, requires --force to unload or purge
+```
+
+Para limpiar completamente los módulos, usamos `module --force purge`
+```bash
+[x244645@login1 ~]$ module --force purge
+[x244645@login1 ~]$ module list
+No modules loaded
+```
+
+```bash
+#Este comando no funciona
+[x244645@login1 ~]$ module purge --force
+The following modules were not unloaded:
+  (Use "module --force purge" to unload all):
+
+  1) apps/2021
+
+```
+
 # Sobreviviendo al "Version hell"
 ## Versiones de Python
 Magerit ofrece múltiples versiones de Python, lo que puede resultar confuso al inicio. Por lo que a continuación, explicaré varios puntos sobre las versiones disponibles.
@@ -274,7 +323,7 @@ Como podemos ver, al instalar `pandas`, pid trae consigo ciertas dependencias co
 > [!info] NOTA
 >  Instalar dependencias desde la terminal interactiva de Magerit es extremadamente lento, para realizar la preparación del entorno virtual se recomienda usar los "nodos debug"
 ### Instalar versión especifica de una librería
-Para instalar una versión especifica debemos indicarla después del nombre. Por ejemplo, `install numpy==1.15.4`
+Para instalar una versión especifica debemos indicarla después del nombre. Por ejemplo, `pip install numpy==1.15.4`
 
 ### Ver las librerias instaladas
 Podemos verlas usando el comando `pip list`. Podemos indicar el formato deseado.
@@ -308,8 +357,8 @@ Si cometimos un error o ya no queremos usar una librería, podemos eliminarla in
 (entorno_prueba) [x123456@login2 prueba_venv]$ pip uninstall pandas
 ```
 
-### Congelar las librerías instaladas
-Una de los comandos más útiles para trabajar con este tipo de entornos es `pip freeze`. Este comando vuelca la lista de dependencias instaladas en el entorno.
+### "Congelar" las librerías instaladas
+Una de los comandos más útiles para trabajar con este tipo de entornos es `pip freeze`. Este comando vuelca la lista de dependencias instaladas en el entorno en un momento dado.
 ```bash
 (entorno_prueba) [x123456@login2 prueba_venv]$ pip freeze
 numpy==1.19.5
