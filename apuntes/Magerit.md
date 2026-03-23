@@ -427,7 +427,7 @@ module purge && module load <app>
 srun <app> --app-param app_args
 ```
 
-> [!info] En construcción
+> [!info] NOTA
 > Se recomienda revisa la guía oficial de Cesvima
 > https://docs.cesvima.upm.es/magerit/jobs/
 
