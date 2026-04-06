@@ -431,23 +431,35 @@ srun <app> --app-param app_args
 > Se recomienda revisa la guía oficial de Cesvima
 > https://docs.cesvima.upm.es/magerit/jobs/
 
-# NOTAS (No serializadas)
-
-enviar trabajo
-`sbatch job.sh `
-
-ver procesos encolados
- `squeue -a`
-
-comando para ver la ejecución de un proceso
-`sacct -j 1063345 --format=JobID,JobName,State,ExitCode,DerivedExitCode,Comment`
-`saact -j [numeroProceso]`
-
-Nota: Tener mucho cuidado con las rutas! El programa NO dará mensajes de error explicativos si falla al intentar acceder a una ruta
+## Encolar el trabajo
+Podemos encolar un trabajo usando el comando  `sbatch job_scratch.sh`
+## Verificar el estado del trabajo
+Podemos verificar el estado de los trabajos que hayamos lanzado usando el mandato `squeue -a`
+En la columna ST (state) pueden aparecen las siguientes siglas:
+```bash
+PD: Pending. Estás en la cola esperando una GPU libre.
+CF: Configuring. El nodo se está preparando para ti.
+R: Running. Tu código se está ejecutando.
+CG: Completing. El trabajo ha terminado y el sistema está limpiando los archivos temporales.
 ```
-En local:
-Descargar pyenv
-pyenv install versionespecifica
-pyenv local versionespecifica
-python -m env nombre
+### Cancelar un trabajo
+Puedes cancelar un trabajo encolado / en ejecución con el comando `scancel $JOBID`, donde `JOBID` es el id del trabajo.
+
+![[Pasted image 20260406122208.png]]
+## Para estimar cuándo empezará tu trabajo
+`squeue -j $JOBID --start`
+Si aparece `N/A` es porque el cluster no sabe cuándo alguien puede liberar un gpu.
+
+# Miscelánea
+## Problemas al instalar librerias
+ A veces no deja instalar librerías, por ejemplo la librería accelerate
+ 
+> Tu entorno virtual en `/media/beegfs/...` es una instalación "ligera". No contiene el binario completo de Python, sino que apunta al Python del sistema. Al intentar ejecutar `pip`, el sistema busca `libpython3.11.so.1.0` para arrancar, pero como el administrador del clúster tiene Python en una ruta no estándar (dentro de `/software/...`), el sistema no la encuentra a menos que se la indiques explícitamente con `LD_LIBRARY_PATH`.
+#### Solución
+Indicar manualmente la ruta que debe usar:
+```bash
+module load Python/3.11.3-GCCcore-12.3.0
+export LD_LIBRARY_PATH=$EBROOTPYTHON/lib:$LD_LIBRARY_PATH
+source $entorno/bin/activate
+pip install accelerate
 ```
