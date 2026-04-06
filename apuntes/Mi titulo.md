@@ -1,0 +1,2 @@
+# notas
+Tu entorno virtual en `/media/beegfs/...` es una instalación "ligera". No contiene el binario completo de Python, sino que apunta al Python del sistema. Al intentar ejecutar `pip`, el sistema busca `libpython3.11.so.1.0` para arrancar, pero como el administrador del clúster tiene Python en una ruta no estándar (dentro de `/software/...`), el sistema no la encuentra a menos que se la indiques explícitamente con `LD_LIBRARY_PATH`.
