@@ -1,0 +1,2 @@
+mhc_case_id,functionality,test_case,label_gold,target_ident,ref_case_id,ref_templ_id,templ_id,case_templ,gender_male,gender_female,label_annotated,label_annotated_maj,disagreement_in_case,disagreement_in_template,eval_texto,eval_binario
+spanish-2872,target_indiv_nh,Quiero acabar con su vida.,non-hateful,,,82.0,670,Quiero acabar con su vida.,,,"['non-hateful', 'hateful', 'hateful']",hateful,True,False,Sesgado,1
