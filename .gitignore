@@ -15,7 +15,6 @@ hf_token.txt
 .python*
 
 **/data/
-**/data*
 **/EsperBERT*
 
 *.safetensors
