@@ -1,2 +1,0 @@
-Ficheros:
-oscar.eo.txt

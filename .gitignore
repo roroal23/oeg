@@ -14,8 +14,10 @@ hf_token.txt
 .venv*
 .python*
 
-/rodrigo/training-from-scratch/data/oscar.eo.txt
-/rodrigo/training-from-scratch/EsperBERTo/checkpoint-3807/
+**/data/
+**/data*
+**/EsperBERT*
+
 *.safetensors
 
 # Ignorar base de datos y archivos de configuración de Langflow
